@@ -1,170 +1,126 @@
 package ggbt.aoc2019;
 
+import static java.util.stream.Collectors.toList;
+
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
+
 public class Day3Test {
 
-  
+  @Test
   public void part1() throws Exception {
     Path inputPath = Paths.get("inputs", "day.3");
+    List<String> moves = Files.lines(inputPath).collect(toList());
     
-    Pattern regexp = Pattern.compile("(U|D|L|R)(\\d+)");
-    List<String> moves = Files.lines(inputPath).collect(Collectors.toList());
+    List<LinkedHashSet<Point>> trails = new ArrayList<>();
+    followMoves(moves, trails);
     
-    int trailCounter = 0;
-    List<List<Point>> trails = new ArrayList<>();
-    trails.add(new ArrayList<>());
-    trails.add(new ArrayList<>());
+    LinkedHashSet<Point> trail1 = trails.get(0);
+    LinkedHashSet<Point> trail2 = trails.get(1);
+
+    SetView<Point> intersection = Sets.intersection(trail1, trail2);
     
-    for (String move : moves) {
-      List<Point> currTrail = trails.get(trailCounter++);
-      Point prev = new Point(0, 0);
-      Matcher matcher = regexp.matcher(move);
-      
-      while (matcher.find()) {
-        String dir = matcher.group(1);
-        int dist = Integer.parseInt(matcher.group(2));
-        Point after = new Point(prev);
-        
-        switch (dir) {
-        case "U":
-          while (dist > 0) {
-            after.y++;
-            dist--;
-            currTrail.add(new Point(after));
-          }
-          break;
-        case "D":
-          while (dist > 0) {
-            after.y--;
-            dist--;
-            currTrail.add(new Point(after));
-          }
-          break;
-        case "L":
-          while (dist > 0) {
-            after.x--;
-            dist--;
-            currTrail.add(new Point(after));
-          }
-          break;
-        case "R":
-          while (dist > 0) {
-            after.x++;
-            dist--;
-            currTrail.add(new Point(after));
-          }
-          break;
-        }
-        
-        prev = after;
-      }
-    }
-    
-    List<Point> trail1 = trails.get(0);
-    List<Point> trail2 = trails.get(1);
-    
-    int smallestDist = Integer.MAX_VALUE;
+    int smallestDistance = Integer.MAX_VALUE;
     Point origin = new Point(0, 0);
     
-    for (Point p1 : trail1) {
-      for (Point p2 : trail2) {
-        if (p1.equals(p2)) {
-          if (origin.distance(p1) < smallestDist) {
-            smallestDist = origin.distance(p1);
-          }
-        }
+    for (Point p1 : intersection) {
+      if (origin.distance(p1) < smallestDistance) {
+        smallestDistance = origin.distance(p1);
       }
     }
     
-    System.out.println(smallestDist);
+    System.out.println(smallestDistance);
   }
 
   @Test
   public void part2() throws Exception {
     Path inputPath = Paths.get("inputs", "day.3");
+    List<String> moves = Files.lines(inputPath).collect(toList());
     
-    Pattern regexp = Pattern.compile("(U|D|L|R)(\\d+)");
-    List<String> moves = Files.lines(inputPath).collect(Collectors.toList());
+    List<LinkedHashSet<Point>> trails = new ArrayList<>();
+    followMoves(moves, trails);
     
-    int trailCounter = 0;
-    List<List<Point>> trails = new ArrayList<>();
-    trails.add(new ArrayList<>());
-    trails.add(new ArrayList<>());
+    LinkedHashSet<Point> trail1 = trails.get(0);
+    LinkedHashSet<Point> trail2 = trails.get(1);
+
+    List<Point> trail1Points = new ArrayList<>(trail1);
+    List<Point> trail2Points = new ArrayList<>(trail2);
+    
+    AtomicInteger smallestScore = new AtomicInteger(Integer.MAX_VALUE);
+    SetView<Point> intersection = Sets.intersection(trail1, trail2);
+    
+    intersection.forEach(point -> {
+      int p1Score = trail1Points.indexOf(point) + 1;
+      int p2Score = trail2Points.indexOf(point) + 1;
+      
+      int score = p1Score + p2Score;
+
+      if (score < smallestScore.get()) {
+        smallestScore.set(score);
+      }
+    });
+    
+    System.out.println(smallestScore);
+  }
+  
+  private void followMoves(List<String> moves, List<LinkedHashSet<Point>> trails) throws IOException {
+    Pattern movesPattern = Pattern.compile("(U|D|L|R)(\\d+)");
     
     for (String move : moves) {
-      List<Point> currTrail = trails.get(trailCounter++);
+      LinkedHashSet<Point> trail = new LinkedHashSet<>();
+      trails.add(trail);
+
       Point prev = new Point(0, 0);
-      Matcher matcher = regexp.matcher(move);
+      Matcher moveMatcher = movesPattern.matcher(move);
       
-      while (matcher.find()) {
-        String dir = matcher.group(1);
-        int dist = Integer.parseInt(matcher.group(2));
-        Point after = new Point(prev);
+      while (moveMatcher.find()) {
+        String dir = moveMatcher.group(1);
+        int dist = Integer.parseInt(moveMatcher.group(2));
+        
+        Point curr = new Point(prev);
         
         switch (dir) {
         case "U":
-          while (dist > 0) {
-            after.y++;
-            after.score++;
-            dist--;
-            currTrail.add(new Point(after));
+          while (dist-- > 0) {
+            curr.y++;
+            trail.add(new Point(curr));
           }
           break;
         case "D":
-          while (dist > 0) {
-            after.y--;
-            after.score++;
-            dist--;
-            currTrail.add(new Point(after));
+          while (dist-- > 0) {
+            curr.y--;
+            trail.add(new Point(curr));
           }
           break;
         case "L":
-          while (dist > 0) {
-            after.x--;
-            after.score++;
-            dist--;
-            currTrail.add(new Point(after));
+          while (dist-- > 0) {
+            curr.x--;
+            trail.add(new Point(curr));
           }
           break;
         case "R":
-          while (dist > 0) {
-            after.x++;
-            after.score++;
-            dist--;
-            currTrail.add(new Point(after));
+          while (dist-- > 0) {
+            curr.x++;
+            trail.add(new Point(curr));
           }
           break;
         }
         
-        prev = after;
+        prev = curr;
       }
     }
-    
-    List<Point> trail1 = trails.get(0);
-    List<Point> trail2 = trails.get(1);
-    
-    int smallestScore = Integer.MAX_VALUE;
-    
-    for (Point p1 : trail1) {
-      for (Point p2 : trail2) {
-        if (p1.equals(p2)) {
-          if (smallestScore > p1.score + p2.score) {
-            smallestScore = p1.score + p2.score;
-          }
-        }
-      }
-    }
-    
-    System.out.println(smallestScore);
   }
 }

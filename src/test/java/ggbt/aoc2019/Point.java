@@ -3,24 +3,15 @@ package ggbt.aoc2019;
 public class Point {
   int x;
   int y;
-  int score;
   
   public Point(int x, int y) {
     this.x = x;
     this.y = y;
-    this.score = 0;
   }
 
-  public Point(int x, int y, int score) {
-    this.x = x;
-    this.y = y;
-    this.score = score;
-  }
-  
   public Point(Point other) {
     this.x = other.x;
     this.y = other.y;
-    this.score = other.score;
   }
   
   public int distance(Point other) {
@@ -30,7 +21,7 @@ public class Point {
   
   @Override
   public String toString() {
-    return "[" + x + ", " + y + ", " + score + "]";
+    return "[" + x + ", " + y + "]";
   }
 
   @Override
