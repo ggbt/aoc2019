@@ -72,7 +72,7 @@ public class Day2Test {
     .map(Integer::parseInt)
     .collect(toList());
     
-    for (int i = 0; i <= 99; ++i) {
+    root: for (int i = 0; i <= 99; ++i) {
       for (int j = 0; j <= 99; ++j) {
         List<Integer> p = new ArrayList<>(program);
         
@@ -80,7 +80,7 @@ public class Day2Test {
         
         if (result == 19690720) {
           System.out.println(100 * i + j);
-          System.exit(0);
+          break root;
         }
       }
     }
