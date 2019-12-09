@@ -18,6 +18,8 @@ import org.junit.Test;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 
+import ggbt.aoc2019.common.Point;
+
 public class Day3Test {
 
   @Test

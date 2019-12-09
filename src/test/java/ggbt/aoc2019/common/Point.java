@@ -1,8 +1,8 @@
-package ggbt.aoc2019;
+package ggbt.aoc2019.common;
 
 public class Point {
-  int x;
-  int y;
+  public int x;
+  public int y;
   
   public Point(int x, int y) {
     this.x = x;

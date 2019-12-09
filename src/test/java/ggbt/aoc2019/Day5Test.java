@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Test;
 
@@ -22,12 +22,12 @@ public class Day5Test {
     
     String programInput = new String(Files.readAllBytes(inputPath), StandardCharsets.UTF_8);
     
-    List<Integer> program = Arrays.asList(programInput.split(",")).stream()
-    .map(Integer::parseInt)
+    List<Long> program = Arrays.asList(programInput.split(",")).stream()
+    .map(Long::parseLong)
     .collect(toList());
     
-    AtomicInteger output = new AtomicInteger();
-    new IntCode(program, () -> 1, output::set).run();
+    AtomicLong output = new AtomicLong();
+    new IntCode(program, () -> 1L, output::set).run();
     
     System.out.println(output);
   }
@@ -38,10 +38,10 @@ public class Day5Test {
     
     String programInput = new String(Files.readAllBytes(inputPath), StandardCharsets.UTF_8);
     
-    List<Integer> program = Arrays.asList(programInput.split(",")).stream()
-    .map(Integer::parseInt)
+    List<Long> program = Arrays.asList(programInput.split(",")).stream()
+    .map(Long::parseLong)
     .collect(toList());
     
-    new IntCode(program, () -> 5, System.out::println).run();
+    new IntCode(program, () -> 5L, System.out::println).run();
   }
 }

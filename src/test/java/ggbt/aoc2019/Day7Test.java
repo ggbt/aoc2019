@@ -15,6 +15,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -31,47 +32,50 @@ public class Day7Test {
     
     String programInput = new String(Files.readAllBytes(inputPath), StandardCharsets.UTF_8);
     
-    List<Integer> program = Arrays.asList(programInput.split(",")).stream()
-    .map(Integer::parseInt)
+    List<Long> program = Arrays.asList(programInput.split(",")).stream()
+    .map(Long::parseLong)
     .collect(toList());
 
-    Collections2.permutations(ImmutableList.of(0, 1, 2, 3, 4)).stream()
+    Stream<Long> map = Stream.of(5L).map(x -> x);
+    map.max(java.util.Comparator.naturalOrder());
+    
+    Collections2.permutations(ImmutableList.of(0L, 1L, 2L, 3L, 4L)).stream()
     .map(phaseSettings -> {
       try {
-        List<List<BlockingQueue<Integer>>> amplifiersIO = new ArrayList<>();
+        List<List<BlockingQueue<Long>>> amplifiersIO = new ArrayList<>();
         
         for (int i = 0 ; i < phaseSettings.size(); ++i) {
-          int phase = phaseSettings.get(i);
+          long phase = phaseSettings.get(i);
           
-          BlockingQueue<Integer> input;
+          BlockingQueue<Long> input;
           if (i == 0) {
             input = new ArrayBlockingQueue<>(2);
             input.add(phase);
-            input.add(0); // The first amplifier receives input 0.
+            input.add(0L); // The first amplifier receives input 0.
           } else {
             // The output from the previous amplifier is sent to the current amplifier as input.
             input = amplifiersIO.get(i - 1).get(1);
             input.add(phase);
           }
           
-          BlockingQueue<Integer> output = new ArrayBlockingQueue<>(2);
+          BlockingQueue<Long> output = new ArrayBlockingQueue<>(2);
 
           amplifiersIO.add(ImmutableList.of(input, output));
         }
         
-        for (List<BlockingQueue<Integer>> io : amplifiersIO) {
-          BlockingQueue<Integer> input = io.get(0);
-          BlockingQueue<Integer> output = io.get(1);
+        for (List<BlockingQueue<Long>> io : amplifiersIO) {
+          BlockingQueue<Long> input = io.get(0);
+          BlockingQueue<Long> output = io.get(1);
           
           new IntCode(new ArrayList<>(program), input::take, output::put).run();
         }
 
-        BlockingQueue<Integer> lastAmplifierOutput = amplifiersIO.get(amplifiersIO.size() - 1).get(1);
+        BlockingQueue<Long> lastAmplifierOutput = amplifiersIO.get(amplifiersIO.size() - 1).get(1);
         return lastAmplifierOutput.take();
       } catch (Throwable e) {
         e.printStackTrace();
         System.exit(1);
-        return -1;
+        return -1L;
       }
     })
     .max(naturalOrder())
@@ -84,32 +88,32 @@ public class Day7Test {
     
     String programInput = new String(Files.readAllBytes(inputPath), StandardCharsets.UTF_8);
     
-    List<Integer> program = Arrays.asList(programInput.split(",")).stream()
-    .map(Integer::parseInt)
+    List<Long> program = Arrays.asList(programInput.split(",")).stream()
+    .map(Long::parseLong)
     .collect(toList());
 
     ExecutorService exec = Executors.newFixedThreadPool(5);
     
-    Collections2.permutations(ImmutableList.of(5, 6, 7, 8, 9)).stream()
+    Collections2.permutations(ImmutableList.of(5L, 6L, 7L, 8L, 9L)).stream()
     .map(phaseSettings -> {
       try {
-        List<List<BlockingQueue<Integer>>> amplifiersIO = new ArrayList<>();
+        List<List<BlockingQueue<Long>>> amplifiersIO = new ArrayList<>();
         
         for (int i = 0 ; i < phaseSettings.size(); ++i) {
-          int phase = phaseSettings.get(i);
+          long phase = phaseSettings.get(i);
           
-          BlockingQueue<Integer> input;
+          BlockingQueue<Long> input;
           if (i == 0) {
             input = new ArrayBlockingQueue<>(2);
             input.add(phase);
-            input.add(0); // The first amplifier receives input 0.
+            input.add(0L); // The first amplifier receives input 0.
           } else {
             // The output from the previous amplifier is sent to the current amplifier as input.
             input = amplifiersIO.get(i - 1).get(1);
             input.add(phase);
           }
           
-          BlockingQueue<Integer> output;
+          BlockingQueue<Long> output;
           if (i == phaseSettings.size() - 1) {
             // The last amplifier sends its output to the first amplifier's input forming a loop.
             output = amplifiersIO.get(0).get(0);
@@ -122,9 +126,9 @@ public class Day7Test {
         
         CountDownLatch done = new CountDownLatch(5);
         
-        for (List<BlockingQueue<Integer>> io : amplifiersIO) {
-          BlockingQueue<Integer> input = io.get(0);
-          BlockingQueue<Integer> output = io.get(1);
+        for (List<BlockingQueue<Long>> io : amplifiersIO) {
+          BlockingQueue<Long> input = io.get(0);
+          BlockingQueue<Long> output = io.get(1);
           
           exec.submit(() -> {
             try {
@@ -140,12 +144,12 @@ public class Day7Test {
         
         done.await();
 
-        BlockingQueue<Integer> lastAmplifierOutput = amplifiersIO.get(amplifiersIO.size() - 1).get(1);
+        BlockingQueue<Long> lastAmplifierOutput = amplifiersIO.get(amplifiersIO.size() - 1).get(1);
         return lastAmplifierOutput.take();
       } catch (InterruptedException e) {
         e.printStackTrace();
         System.exit(1);
-        return -1;
+        return -1L;
       }
     })
     .max(naturalOrder())
