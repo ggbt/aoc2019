@@ -18,6 +18,11 @@ public class Point {
     return Math.abs(x - other.x) + Math.abs(y - other.y);
   }
   
+  public void moveOrigin(Point newOrigin) {
+    this.x = this.x - newOrigin.x;
+    this.y = this.y - newOrigin.y;
+    this.y *= -1;
+  }
   
   @Override
   public String toString() {
