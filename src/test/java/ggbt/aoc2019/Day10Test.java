@@ -135,14 +135,10 @@ public class Day10Test {
             .filter(list -> {
               Point intersectedAsteroid = list.get(0);
               
-                currentAsteroid.distance(intersectedAsteroid);
-                currentAsteroid.distance(otherAsteroid);
-                intersectedAsteroid.distance(otherAsteroid);
+              boolean currentIsInMiddle = intersectedAsteroid.distance(otherAsteroid) == 
+                  currentAsteroid.distance(intersectedAsteroid) + currentAsteroid.distance(otherAsteroid);
 
-                boolean currentIsInMiddle = intersectedAsteroid.distance(otherAsteroid) == currentAsteroid
-                    .distance(intersectedAsteroid) + currentAsteroid.distance(otherAsteroid);
-
-                return pointsAreOnSameLine(currentAsteroid, list.get(0), otherAsteroid) && !currentIsInMiddle;
+              return pointsAreOnSameLine(currentAsteroid, list.get(0), otherAsteroid) && !currentIsInMiddle;
             })
             .findFirst();
             
