@@ -24,6 +24,21 @@ public class IntCode {
     this.input = input;
     this.output = output;
   }
+
+  public IntCode(List<Long> program) {
+    this.program = new HashMap<>(program.size() * 4);
+    for (int i = 0; i < program.size(); i++) {
+      this.program.put((long) i, program.get(i));
+    }
+  }
+  
+  public void onInput(ThrowingSupplier<Long, Throwable> input) {
+    this.input = input;
+  }
+  
+  public void onOutput( ThrowingConsumer<Long, Throwable> output) {
+    this.output = output;
+  }
   
   public void run() throws Throwable {
     

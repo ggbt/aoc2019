@@ -76,9 +76,9 @@ public class Day8Test {
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
         if (decoded.get(i * cols + j).equals(1)) {
-          System.out.print("O");
+          System.out.print("#");
         } else {
-          System.out.print("_");
+          System.out.print(" ");
         }
         
       }
