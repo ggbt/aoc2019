@@ -1,10 +1,10 @@
 package ggbt.aoc2019.common;
 
 public class Point {
-  public int x;
-  public int y;
+  public long x;
+  public long y;
   
-  public Point(int x, int y) {
+  public Point(long x, long y) {
     this.x = x;
     this.y = y;
   }
@@ -14,7 +14,7 @@ public class Point {
     this.y = other.y;
   }
   
-  public int distance(Point other) {
+  public long distance(Point other) {
     return Math.abs(x - other.x) + Math.abs(y - other.y);
   }
   
@@ -33,10 +33,11 @@ public class Point {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + x;
-    result = prime * result + y;
+    result = prime * result + (int) (x ^ (x >>> 32));
+    result = prime * result + (int) (y ^ (y >>> 32));
     return result;
   }
+
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

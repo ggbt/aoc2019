@@ -62,7 +62,7 @@ public class Day10Test {
 
       // Sort the asteroid on the same laser line: closest to station last.
       target.sort((a1, a2) -> {
-        return theBestStation.distance(a1) - theBestStation.distance(a2);
+        return (int) (theBestStation.distance(a1) - theBestStation.distance(a2));
       });
     });
     

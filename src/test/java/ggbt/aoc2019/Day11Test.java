@@ -61,11 +61,11 @@ public class Day11Test {
   }
 
   private void showColoredPanels(HashMap<Point, Color> colorMap) {
-    int minX = Integer.MAX_VALUE;
-    int minY = Integer.MAX_VALUE;
+    long minX = Integer.MAX_VALUE;
+    long minY = Integer.MAX_VALUE;
 
-    int maxX = Integer.MIN_VALUE;
-    int maxY = Integer.MIN_VALUE;
+    long maxX = Integer.MIN_VALUE;
+    long maxY = Integer.MIN_VALUE;
     
     for (Point point : colorMap.keySet()) {
       if (point.x < minX) {
@@ -82,8 +82,8 @@ public class Day11Test {
       }
     }
     
-    for (int y = minY; y <= maxY; ++y) {
-      for (int x = minX; x <= maxX; ++x) {
+    for (long y = minY; y <= maxY; ++y) {
+      for (long x = minX; x <= maxX; ++x) {
         Color color = colorMap.computeIfAbsent(new Point(x, y), k -> Color.BLACK);
         
         if (color == Color.BLACK) {

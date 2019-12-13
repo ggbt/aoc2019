@@ -35,7 +35,7 @@ public class Day3Test {
 
     SetView<Point> intersection = Sets.intersection(trail1, trail2);
     
-    int smallestDistance = Integer.MAX_VALUE;
+    long smallestDistance = Long.MAX_VALUE;
     Point origin = new Point(0, 0);
     
     for (Point p1 : intersection) {
