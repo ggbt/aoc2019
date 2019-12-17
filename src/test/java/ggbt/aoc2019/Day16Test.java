@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-public class Day16 {
+public class Day16Test {
   
   @Test
   public void part1() throws Exception {
