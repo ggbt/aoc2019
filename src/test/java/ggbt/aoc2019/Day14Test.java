@@ -21,6 +21,28 @@ public class Day14Test {
   
   @Test
   public void part1() throws Exception {
+    initChemicalReactions();
+
+    System.out.println(priceInOre("FUEL", 1L));
+  }
+
+  @Test
+  public void part2() throws Exception {
+    initChemicalReactions();
+    
+    // Take a random number that gives a value bigger than 1 trillion and brute
+    // force search until I find the maximum amount of FUEL I can produce with 1 trillion ORE
+    long number = 1125000;
+    long priceInOre = Long.MAX_VALUE;
+    
+    while (priceInOre > 1_000_000_000_000L) {
+      priceInOre = priceInOre("FUEL", --number);
+    }
+    
+    System.out.println(number);
+  }
+
+  private void initChemicalReactions() throws Exception {
     Path inputPath = Paths.get("inputs", "day.14");
     Pattern reactionPattern = Pattern.compile("(\\d+) ([A-Z]+)");
     
@@ -50,8 +72,6 @@ public class Day14Test {
         reactions.putEdgeValue(output, input, inputQuantity);
       }
     });
-
-    System.out.println(priceInOre("FUEL", 1L));
   }
   
   private long priceInOre(String chemical, long quantity) {
@@ -59,9 +79,9 @@ public class Day14Test {
       return quantity;
     }
     
-    long quantityInStock = inventory.getOrDefault(chemical, 0L);
-    inventory.put(chemical, Math.max(0, quantityInStock - quantity));
-    long quantityNeeded = quantity - quantityInStock;
+    long quantityAvailable = inventory.getOrDefault(chemical, 0L);
+    inventory.put(chemical, Math.max(0, quantityAvailable - quantity));
+    long quantityNeeded = quantity - quantityAvailable;
     
     long priceInOre = 0;
     
