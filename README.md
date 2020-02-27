@@ -7,3 +7,4 @@ Run this command to execute the challenges:
 ```
 mvn surefire:test
 ```
+
